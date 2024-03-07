@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text to Speech</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <form action="/convert" method="post">
+        <label for="textInput">Enter text:</label><br>
+        <textarea id="textInput" name="textInput" rows="5"></textarea><br>
+        <input type="submit" value="Convert">
+    </form>
+    <div class="audio">
+    <p>Output audio:</p>
+    <audio id="audioPlayer" controls></audio>
+</div>
+    <script>
+        const form = document.querySelector('form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            fetch('/convert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(new FormData(form))
+            })
+            .then(response => response.json())
+            .then(data => {
+                const audioPlayer = document.getElementById('audioPlayer');
+                audioPlayer.src = data.audioFilePath;
+            });
+        });
+    </script>
+</body>
+</html>
